@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Type of Football Fan Are You?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question h2 {
+            font-size: 1.2em;
+        }
+        .answers button {
+            display: block;
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .answers button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #007BFF;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>What Type of Football Fan Are You?</h1>
+    <div id="quiz">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            {
+                question: "How often do you watch football?",
+                answers: {
+                    "A": { text: "Every match I can find.", scores: { "Loyal Ultra": 3, "Tactico": 2 } },
+                    "B": { text: "Only the big games.", scores: { "Casual": 3, "Drama Lover": 1 } },
+                    "C": { text: "Whenever I’m in the mood.", scores: { "Neutral": 2, "Casual": 1 } },
+                    "D": { text: "I mostly only watch my team play.", scores: { "Loyal Ultra": 3, "Neutral": 2 } }
+                }
+            },
+            {
+                question: "What’s your favorite thing about football?",
+                answers: {
+                    "A": { text: "The passion of the fans.", scores: { "Loyal Ultra": 3, "Drama Lover": 2 } },
+                    "B": { text: "Breaking down the tactics.", scores: { "Tactico": 3, "Neutral": 1 } },
+                    "C": { text: "The storylines and drama.", scores: { "Drama Lover": 3, "Banter King": 2 } },
+                    "D": { text: "The nostalgia and history.", scores: { "Nostalgia Fan": 3 } },
+                    "E": { text: "The brilliance of the players.", scores: { "Neutral": 3, "Loyal Ultra": 2 } }
+                }
+            },
+            // Add remaining questions here in the same format...
+        ];
+
+        let currentQuestion = 0;
+        const scores = {
+            "Loyal Ultra": 0,
+            "Tactico": 0,
+            "Banter King": 0,
+            "Casual": 0,
+            "Nostalgia Fan": 0,
+            "Neutral": 0,
+            "Drama Lover": 0
+        };
+
+        const quizDiv = document.getElementById('quiz');
+        const resultDiv = document.getElementById('result');
+
+        function displayQuestion() {
+            quizDiv.innerHTML = '';
+            const questionData = questions[currentQuestion];
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question';
+
+            const questionTitle = document.createElement('h2');
+            questionTitle.textContent = questionData.question;
+            questionElement.appendChild(questionTitle);
+
+            const answersDiv = document.createElement('div');
+            answersDiv.className = 'answers';
+
+            for (const [key, answer] of Object.entries(questionData.answers)) {
+                const button = document.createElement('button');
+                button.textContent = answer.text;
+                button.onclick = () => {
+                    for (const [archetype, points] of Object.entries(answer.scores)) {
+                        scores[archetype] += points;
+                    }
+                    nextQuestion();
+                };
+                answersDiv.appendChild(button);
+            }
+
+            questionElement.appendChild(answersDiv);
+            quizDiv.appendChild(questionElement);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                displayQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizDiv.innerHTML = '';
+            const maxScore = Math.max(...Object.values(scores));
+            const fanTypes = Object.keys(scores).filter(key => scores[key] === maxScore);
+            resultDiv.textContent = `You are a ${fanTypes.join(' and ')}!`;
+        }
+
+        displayQuestion();
+    </script>
+</body>
+</html>
